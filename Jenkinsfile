@@ -392,3 +392,53 @@ pipeline {
         }
     }
 }
+
+
+// =============================================
+    //Kubernetes Deployment (k8s/green-deployment.yaml):
+        // STAGE 8: SUPPORTING FILES
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: myapp-green
+          spec:
+            replicas: 3
+            selector:
+              matchLabels:
+                app: myapp
+                track: green
+            template:
+              metadata:
+                labels:
+                  app: myapp
+                  track: green
+              spec:
+                containers:
+                - name: myapp
+                  image: ogegak2003/myapp
+                  ports:
+                  - containerPort: 8000
+                  env:
+                  - name: DJANGO_ENV
+                    value: "production"
+                  - name: DB_HOST
+                    valueFrom:
+                      configMapKeyRef:
+                        name: myapp-config
+                        key: db.host
+        //=============================================
+
+        //Install required plugins
+                docker
+                kubernetes
+                pipeline
+                blueocean
+                slack
+
+          //Credentials Setup:
+
+          Docker Hub: Add username ogegak2003 with access token
+
+          GitHub: Add personal access token with repo scope
+
+          Kubernetes: Upload kubeconfig file
